@@ -1,0 +1,30 @@
+- Just like you can customized join column:
+
+    @ManyToOne
+    @JoinColumn(name = "paystub_for")
+    private Employee employee;
+
+- You can customize join table too:
+
+    @ManyToMany
+    @JoinTable(name = "Email_Group_Subscriptions",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "email_group_id"))
+    private List<EmailGroup> emailGroups = new ArrayList<>();
+
+
+- Table name would be changed to : Email_Group_Subscriptions
+- Two Column names would be changed to: employee_id and email_group_id.
+
+//inverseJoinColumns is the column of the opposite side. 
+
+.............
+
+//NEW TABLE:
+
+SELECT * FROM EMAIL_GROUP_SUBSCRIPTIONS;
+
+EMPLOYEE_ID  	EMAIL_GROUP_ID  
+1			7
+1			7
+1			8

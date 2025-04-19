@@ -1,0 +1,95 @@
+So create Java project with maven which contains JPA and use JPA to connect to our database.
+We don't want to use spring boot for learning jpa. So starting with our core project to see jpa behind the scene.
+
+- Now, add dependencies which is the implementation of hibernate which supports JPA:
+
+  <dependencies>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
+      <version>5.6.12.Final</version>
+    </dependency>
+  </dependencies>
+
+- Add, database driver as we need it because JDBC is also run behind the scene. Now we can interact with database.
+
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>2.2.224</version>
+      <scope>runtime</scope>
+    </dependency>
+
+-----------------------------------------------------------------------------------
+# TELL JPA LIBRARBY WHERE OUR DATABASE EXISTS:
+So, create persistence.xml. It contains, where is database, username,password.
+
+# Creating Persistance context in resources: META-INF(create if not present,it's convention only)
+
+Dimag kharab vo persistance.xml ko namilera so github bata paste gare OR Hibernate doc ma cha.
+
+The whole xml is telling the JPA, here's my database,how to connect to it and the behaviour of database when we connect to it.
+
+So now what to do after that? So, here's our business logic will come.
+
+-----------------------------------------------------------------------------------
+
+- Now, Create Employee class, Create Employee instance and have JPA save that instance in database.
+So, when using JPA we should be dealing with class and objects not SQL queries.
+
+#MAPPING:
+
+@Entity - Whenever we need to tell certain class is concerned of JPA. You might tell in future tell Save,Retrieve that instance of class
+@Table(name = "EMPLOYEE_DATA") - What table name is mapped to.
+public class Employee {
+    @Id - Table needs a primary key.
+    private int id;
+    private String name;
+
+Now, JPA will create the database named = EMPLOYEE_DATA with column name id(pk) and name.
+
+# Here, we have instance of this class, need to tell JPA to save it also. We save it by getting EntityManager. This is a object(service) which manages @Entity. Entity is a data holder JPA needs to deal with. And, EntityManager will manage will it for you.
+
+ public static void main(String[] args) {
+        Employee employee = new Employee();
+        employee.setId(1);
+        employee.setName("Milan");
+
+	EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myApp"); // creating Entity manager factory first.
+        EntityManager entityManager = entityManagerFactory.createEntityManager();  // with the help of entity manager factory creating entity manager
+        EntityTransaction transaction =  entityManager.getTransaction();
+	entityManager.persist(employee); // now, we are adding the instance to database. At first database is empty so it'll create table first
+   	transaction.commit();
+    }
+
+"myApp" name in entitymanager factory is from xml file which it's unit name  : <persistence-unit name="myApp" transaction-type="RESOURCE_LOCAL"> 
+
+Now, run the main method: it'll create table with sql queries, inserts data. 
+
+-----------------------------------------------------------------------------------
+
+//PRINTS:
+
+Hibernate: 
+    
+    drop table if exists EMPLOYEE_DATA CASCADE 
+
+Hibernate: 
+    
+    create table EMPLOYEE_DATA (
+       id integer not null,
+        name varchar(255),
+        primary key (id)
+    )
+
+
+Hibernate: 
+    insert 
+    into
+        EMPLOYEE_DATA
+        (name, id) 
+    values
+        (?, ?)
+
+
+Hibernate has created sql queries.. Which has come from the annotation. And begins to execute our code.

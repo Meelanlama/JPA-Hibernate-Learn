@@ -1,0 +1,37 @@
+ @Id
+ private int id;
+
+This marked the id as primary key while creating the table in database.
+
+But, we can use @Id in others member variables too.
+
+You can have String as @Id too. But it's not suitable as numreic PK.
+
+-------------------------------------------------------------------------------
+
+@Id
+private long id;
+
+Using @Id in long type is not recommened because of precision issues.
+
+-------------------------------------------------------------------------------
+
+@Id - makes value | unique constraint and cannot save to database.
+-------------------------------------------------------------------------------
+
+@Id
+@GeneratedValue -> This auto generates the value
+private int id;
+
+We don't have to set the value for PK(Id) and now shouldn't be worried about defining primary key.
+
+- @GeneratedValue(strategy = GenerationType.AUTO) -> By default, the strategy is auto which is letting database choose how it generates value.
+
+- @GeneratedValue(strategy = GenerationType.SEQUENCE) -> But typically value is generated using SEQUENECE. There's a SEQUENCE object that table maintains/creates and for generating each primary key, there's a seperate sequence. It never returns same sequence value for two inserts. Always know we're getting different value.
+
+- @GeneratedValue(strategy = GenerationType.TABLE) -> It creates different table for generating unique value.
+
+-------------------------------------------------------------------------------
+- For most parts you don't have to worry about it, leave it default and database will manage the value for it. 
+
+

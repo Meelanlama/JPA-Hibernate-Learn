@@ -1,0 +1,16 @@
+If you know firstname of the employee is "Java" but don't know last name.
+
+--- Like
+
+TypedQuery<Employee> query = entityManager.createQuery(
+    "SELECT e FROM Employee e WHERE e.name LIKE 'Java%'",
+    Employee.class
+);
+
+//Will prints: JAVA BRAINS.
+
+---- BETWEEN
+
+"select e from Employee e where e.age BETWEEN 20 and 25"
+
+--- MOST QUERIES YOU DO IN SQL TRANSLATES TO JPQL

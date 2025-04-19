@@ -1,0 +1,48 @@
+There are two additional methods which are super useful when dealing with entities.
+
+.refresh() and .clear()
+
+- .clear() -> works similar in the detach way, it's saying you don't want that entity to be tracked in persistence context any changes is not gonna be persisted.
+If you wanna do it with one entity then you can use .detach().
+But, if you want all the entities in your persistence context then use .clear().
+
+entityManager.clear() -> clears all the entities of the persistence context.
+
+-------------------------------------------------------------------------------
+
+- .refresh() -> Here's how refresh works, we have .find(employee) entity fetched from the database and you have an entity which has been persisted to database at some point by using .flush() or automatically.
+
+Example:
+
+		Employee managedEmployee = entityManager.find(Employee.class,1);
+
+Here, as long as you don't make any changes to managedEmployee. It's gonna be same in database side and persistence context.
+
+But if you change that entity.
+
+			managedEmployee.setAge(23); 
+			managedEmployee.setDob(null); 
+
+			entityManager.refresh(managedEmployee);
+
+
+There's a change in this entity and it's called dirty. So it's no longer the same as the database value.
+If you do:   		        transaction.commit();
+
+JPA will save the changed into the database.
+
+But, you changed your mind and no need to change the value of employee and it should be same state as the previous value in the database. So, erase out all the changes you have made in managedEmployee.
+
+			entityManager.refresh(managedEmployee);
+
+What happens when you do .refresh() is JPA will do a query the database and do a select query database and update managedEmployee instance with whatever is in the database value.   
+Any changes made there will be lost and again back to same value as in databse.  
+
+I just wanna refresh the entity with whatever was in the correspoding row in table.
+-------------------------------------------------------------------------------
+
+
+
+
+
+	

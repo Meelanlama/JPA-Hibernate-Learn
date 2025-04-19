@@ -1,0 +1,41 @@
+If you have database table already and starting java application then.
+In that case you don't have flexibility to create table.
+So apply right annotations in this case.
+Remove "create-drop" from persistence.
+
+We need to know how to do mapping and customize it.
+
+-------------------------------------------------------------------------------
+@Table - Name is optional, it takes class name if name is not there.
+@Table(name = "EMPLOYEE_DATA", schema = "emp-schema") - Schema specifies which table it needs to go. This is common when you have table in multiple schema. It's also known as catalog="" in some databases.
+
+-------------------------------------------------------------------------------
+Now, lets talk property of the class. This member variable is mapped to the column of the table.
+
+    @Id
+    private int id;
+    private String name;
+    private int age;
+
+When you have primitive member variable, it's going to map or create column in the database by default.
+
+@Basic- it's not required, it's default like persist this variable in column.
+
+@Column(name="Employee_Name") - This will change the column name in database
+
+One of the important thing that comes handy is:
+
+   @Column(name = "Employee_SSN", unique = true,length=10,nullable = false)
+    private String ssn;
+
+This unique won't allow repeated value in that column. If they have same ssn, then it's not going to save it and gives us database exception. 
+Here, ssn number shouldn't be more than 10. varchar(10)
+This ssn column cannot be null. As we have set nullable = false. by default it's true.
+
+- insertable = true/false, updatable = true/false
+This indicates a column can be updated or not and value can inserted or not.
+-------------------------------------------------------------------------------
+
+
+
+

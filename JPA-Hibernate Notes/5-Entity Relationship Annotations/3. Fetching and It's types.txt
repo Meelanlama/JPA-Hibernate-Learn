@@ -1,0 +1,90 @@
+Now, we're looking at the implections of relationship with fetching data.And we're getting instance while fetching it.
+
+But, how does it work with the relationships?
+
+For relationships there is a important consequence which deals with the owner of the relationship.
+
+-- value = "none" is deprecated: So use "validate"
+
+--Explain:
+
+Create Read only JPA class: JpaStarterRead
+
+Employee employee = entityManager.find(Employee.class, 1);
+ System.out.println(employee);
+ 
+//Prints:
+Employee{id=1, name='Milan', age=22, dob=2025-02-25, ssn='123456789', type=FULL_TIME, accessCard=AccessCard{id=3, issuedDate=2025-02-25 19:04:49.773, isActive=true, firmwareVersion='1.0'}}
+
+// HERE, WE CAN SEE WE JUST ASKED FOR EMPLOYEE DATA TO BE PRINTED BY CALLING EMPLOYEE INSTANCE. BUT HERE THE DATA OF BOTH TABLE(EMPLOYEE AND ACCESS CARD IS PRINTED).
+As, it detected employee has a reference to acess card instance and get that card by JOINING THE TABLES.
+
+--- IT'S JOINING THE TABLE with Acess_Card Table:
+Select *
+  from
+        EMPLOYEE_DATA employee0_ 
+    left outer join
+        ACCESS_CARD accesscard1_ 
+            on employee0_.accessCard_id=accesscard1_.id 
+
+
+-- You fetched the data of both tables by default as it has relation with eachother.
+----------------------------------------------------------------------------------------
+But what if you don't want data of other tables? Like in future, this employee can have relations with 10 other tables.
+So, i should only get the data of employee table.
+
+# Here, Getting the employee instance means getting all of those relationships and getting them all at the same time.
+
+----------------------------------------------------------------------------------------
+IF YOU DON'T WANT IT THEN:
+
+HERE is a One to One relationship:
+
+    @OneToOne(fetch = FetchType.Lazy)
+    private AccessCard accessCard;  
+
+- This relationship is "eagerly" fetched as its one to one.
+
+- So make it "Lazily" fetched. It's like unless it ask me to fetch. it won't fetch at first.
+
+- Now, after making it lazy: it's gonna wait until you make the call to read the card.
+Then only it'll fetch the card.
+
+---- CODE EXAMPLE:
+
+	Employee employee = entityManager.find(Employee.class, 1);
+        System.out.println("********** Employee Name **********");
+        System.out.println(employee.getName());
+        System.out.println("********** Employee Card **********");
+        System.out.println(employee.getAccessCard());
+
+--- Explanation:
+
+//prints:
+********** Employee Name **********
+Milan
+
+At first, only the employee table is selected and called from there. It's not joined with access card table as it's called yet.
+
+
+********** Employee Card **********
+AccessCard{id=3, issuedDate=2025-02-25 19:04:49.773, isActive=true, firmwareVersion='1.0'}
+
+Here, now it'll print access card data of that employee because it's now called.
+
+- So, what lazy fetch does is it'll only fetch the data and join table when needed.
+
+----------------------------------------------------------------------------------------
+
+This is more important when you have one to many.
+
+Like: Department has many employees.
+
+So, when we are getting department information. Does it gets all the employee information?
+
+That's why we should make it "LAZY" Fetch.
+
+----------------------------------------------------------------------------------------
+
+
+

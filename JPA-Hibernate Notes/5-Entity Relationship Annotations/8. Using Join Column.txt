@@ -1,0 +1,23 @@
+    @Column(name = "pay_period_start")
+    private Date payPeriodStart;
+
+-- Changing column names for normal member variables
+-- This ones are data column.
+
+----------------------------------------------------------------------------------------
+    @ManyToOne
+    private Employee employee;
+
+It'll lookup and make this column name  employee_id as it's related to id of employee.
+
+-- You cannot add @Column to this type of property.
+-- This one is join column. (FK reference)
+
+
+    @ManyToOne
+    @JoinColumn(name = "paystub_for")
+    private Employee employee;
+
+-- This column name will changed.
+
+----------------------------------------------------------------------------------------

@@ -1,0 +1,63 @@
+IF you wanna print all the list of employees then:
+
+"select e from Employee e",
+
+employees.forEach(e-> System.out.println(e.getName()));
+
+Here, In JPQL what am i doing is inorder to fetch only names, I'm fetching the details of all employees but printing only result.. which is not necessary. All i want was name.
+
+-- BUT IN SQL IT WILL BE ONLY NAME:
+SELECT name from EMPLOYEE_DATA;
+
+### We can do that in JPQL too. But it's quite tricky. It'll not return the Employee/Entity Type. It'll Return the String Type.
+
+CODE: HERE WE CHANGED IT TO STRING TYPE.
+
+	TypedQuery<String> query = entityManager.createQuery(
+                "select e.name from Employee e",
+                String.class);
+        List<String> resultList = query.getResultList();
+
+        resultList.forEach(System.out::println);
+
+//prints: Milan,JavaBrains
+
+----------------------------------------------------------------------------
+
+But what if i want both name and age of employee. So String Type would also give error.
+In this case, we use GENERIC TYPE OBJECT which can take all objects.
+
+CODE:
+	TypedQuery<Object[]> query = entityManager.createQuery(
+                "select e.name,e.age,e.type from Employee e",
+                Object[].class);  //getting back array of objects
+
+        List<Object[]> resultList = query.getResultList();
+
+        resultList.forEach(e-> System.out.println(e[0]+","+e[1] + ","+e[2]));
+
+//PRINTS:
+Milan,22,FULL_TIME
+Java Brains,30,INTERN
+
+EXPLAIN: WE ARE TAKING THE OBJECT TYPE ARRAY WHICH CAN TAKE ALL OBJECTS IN IT AND STORE. 
+AND KEEPING THAT RESULT IN LIST OF OBJECT TYPE TOO.
+
+So, now we can add any details we want and get that data.
+
+----------------------------------------------------------------------------
+
+IT ALSO WORKS WITH JOIN TYPES.
+
+CODE:
+
+ 	TypedQuery<Object[]> query = entityManager.createQuery(
+                "select e.name, a.issuedDate from Employee e, AccessCard a",
+                Object[].class);  //getting back array of objects
+
+
+	List<Object[]> resultList = query.getResultList();
+
+        resultList.forEach(e-> System.out.println(e[0]+","+e[1] ));
+
+

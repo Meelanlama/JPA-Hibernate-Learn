@@ -1,0 +1,45 @@
+Now, it's time to look relations between entities.
+
+So, we are creating a new entity(Java class). Access card to enter a building.
+
+@Entity
+@Table(name = "ACCESS_CARD")
+public class AccessCard {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    private Date issuedDate;
+    private boolean isActive;
+    private String firmwareVersion;
+
+	//Getters & Setters
+}
+
+- We have 2 entities, EMPLOYEE AND ACCESS_CARD.
+
+- So, now we'll create a new accesscard instance.
+
+// Creating a new instance for Access Card
+        AccessCard card1 = new AccessCard();
+        card1.setIssuedDate(new Date());
+        card1.setActive(true);
+        card1.setFirmwareVersion("1.0");
+
+We'll persist this created instance:
+ entityManager.persist(card1);
+ entityManager.persist(card2);
+
+-- What JPA will do now is it'll detect these two are also entities and it'll save it in database by creating DDL for AcessCard table first and create column. After that persistence happens.
+
+<property name="hibernate.hbm2ddl.auto" value="create"/>
+
+-- Changing the value to create in persistence.xml file. So it'll create table..
+
+------------------------------------------------------------------------------
+
+- What we're missing here is a relationship between a tables.
+Like: card1 to employee1 and card2 to employee2 in employee_table with access_card table.
+
+They don't have relationship with eachother for now. So we have to fix this..
+
+

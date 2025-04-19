@@ -1,0 +1,39 @@
+// Contiued of reverse relation..
+
+  Employee employee = entityManager.find(Employee.class, 1);
+  System.out.println(employee);
+
+Now, we cannot get the paystubs data from employee instance.
+
+One way to solve this is by adding a reverse reference:
+
+So, we need to a collections of paystubs in employee class because one employee can have many paystubs.
+
+Add this member variable in Employee class:
+
+	@OneToMany(mappedBy = "employee")
+	private List<PayStub> payStub;
+
+
+### In Paystub class: 
+
+    @ManyToOne
+    private Employee employee;
+
+This member variable in PayStub class is actually owning the relationship.
+
+----------------------------------------------------------------------------------------
+Setting multiple paystubs in employee instance.
+
+- employee.setPayStub(List.of(payStub1, payStub2));
+
+//Now, printing paystubs with employee instance
+
+  System.out.println(employee.getPayStub());
+
+----------------------------------------------------------------------------------------
+
+- When you have @OneToOne relationship. It's always "eager" by default meaning: It'll always fetch the data related to them and fetch it from other table joining that table without asking.
+
+- When you have @OneToMany relationship. It's always "lazy" by default. Meaning: It'll always fetch the data only when needed from the other table. It'll only join the other table and fetch the data when called.
+

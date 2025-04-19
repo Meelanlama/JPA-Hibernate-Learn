@@ -1,0 +1,94 @@
+One to Many and Many to One. They both are similar but only thing that changes it which direction you're looking at.
+
+Example:
+
+@Entity
+public class PayStub {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    private Date payPeriodStart;
+    private Date payPeriodEnd;
+    private long salary;
+
+    //Getters & Setters
+}
+
+Let's create this class first.
+
+Wrie the instance of this class in database:
+
+	PayStub payStub1 = new PayStub();
+        payStub1.setPayPeriodStart(new Date());
+        payStub1.setPayPeriodEnd(new Date());
+        payStub1.setSalary(100000);
+
+        entityManager.persist(payStub1);
+
+
+- We have created 2 paystubs and inserted it in the table. So, what's the paystub related to, it's belongs to the employee. Employee earns the salary and they will get the paystubs.
+
+-A single employee can contain multiple paystubs and multiple paystubs can have single employee.
+
+- Now, it's a "One to Many" Relationships.
+
+- We have inserted two pay stubs. And those two paystubs belongs to employee1.
+
+- You cannot have the paystubs id in the "Employee_Data" table because one employee can have multiple paystubs and their id cannot be stored in column and seperate by comma.(Like payStub_id: 1,2,3)
+
+- So, PayStub table should contain the employee_id instead.
+
+- That is the way to do "OneToMany" Mapping. You look at the many side of equation(payStub) in this case and add a reference in this table. So in the pay_stub it'll have the Fk(id of employee).
+----------------------------------------------------------------------------------------
+
+SO, HOW DO YOU MODEL IT IN JAVA SIDE?
+
+- Add this in PayStub class:
+
+    @ManyToOne
+    private Employee employee;
+
+Here, Many Side is PayStub and One side is Employee. So, this is many to one.
+
+Now, JPA know it's many to one so: its gonna put employee_id column in the pay_stub table.
+And you can have multiple pay_stubs pointing to the same employee_id.
+
+----------------------------------------------------------------------------------------
+
+# CODE EXAMPLE:
+
+PayStub payStub1 = new PayStub();
+//other setters
+payStub1.setEmployee(employee);
+
+PayStub payStub2 = new PayStub();
+//other setters
+payStub2.setEmployee(employee);
+
+-- In the above code, we're setting multiple paystubs to the one employee.
+
+----------------------------------------------------------------------------------------
+#PAYSTUB TABLE:
+
+SELECT * FROM paystub;
+ID  	PAYPERIODEND  	PAYPERIODSTART  	SALARY  	EMPLOYEE_ID  
+5	2025-02-25	2025-02-25		100000			1
+6	2025-02-25	2025-02-25		200000			1
+
+----------------------------------------------------------------------------------------
+ 
+Now, For reading the datas:
+
+  PayStub payStub = entityManager.find(PayStub.class, 5);
+  System.out.println(payStub.getEmployee());
+
+-- This will print all the value of payStubs and employee datas.
+
+-- But how about the other way for the employee instance to read paystubs?
+
+  Employee employee = entityManager.find(Employee.class, 1);
+  System.out.println(employee);
+
+	// Continued... in next note...........
+
+

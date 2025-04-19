@@ -1,0 +1,34 @@
+How we fetch data of ManyToMany relationship?
+
+//Reading:
+
+ 	EmailGroup emailGroup = entityManager.find(EmailGroup.class, 7);
+        System.out.println("*** GOT EMAIL GROUP, Now accessing employee list");
+        System.out.println(emailGroup.getEmployeeList());
+
+//PRINTS the data of employee that emailGroup of id = 7 is related to..
+
+// This @ManyToMany is also "Lazy Type". As it'll only access the data when it's needed/called.
+
+-- Code explain:
+
+When getting emailGroup only: it'll select the EmailGroup table only at first.
+
+Hibernate: 
+    select
+        emailgroup0_.id as id1_1_0_,
+        emailgroup0_.groupName as groupnam2_1_0_ 
+    from
+        EmailGroup emailgroup0_ 
+    where
+        emailgroup0_.id=?
+*** GOT EMAIL GROUP, Now accessing employee list
+
+Now, we are acessing data of employee from emailGroup instance. So Only now it'll call that Employee Table when it's accessed.
+This is "LAZY fetch type" by default.
+
+But, when it's "Eager type". When accessing emailGroup Table. The employee table will also be accessed without calling. 
+
+--- Be very careful when fetching ManyToMany. So "Lazy" fetch type is preferred.
+
+--Reason: @ManyToMany relationships can fetch a large number of records, leading to performance issues. Lazy fetching (FetchType.LAZY) is preferred to avoid unnecessary data loading and improve efficiency.

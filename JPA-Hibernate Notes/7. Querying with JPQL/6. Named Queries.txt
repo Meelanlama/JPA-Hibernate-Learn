@@ -1,0 +1,32 @@
+When you know there's a query you will be using over and over again.
+
+Go to the Entity/class and Define the query there which you use frequently.
+
+@Entity
+@Table(name = "EMPLOYEE_DATA")
+@NamedQuery(query = "select e from Employee e order by e.name",name = "emp name asc")
+public class Employee {
+
+//JPQL:
+
+	TypedQuery<Employee> query = entityManager.createNamedQuery("getEmp_name_asc",Employee.class);
+
+        List<Employee> resultList = query.getResultList();
+
+        resultList.forEach(System.out::println)
+
+----------------------------------------------------------------------------
+
+// With paramter:
+@NamedQuery(query = "select e from Employee e where e.age > :age",name = "emp_name_age")
+
+//JPL for parameter:
+
+	TypedQuery<Employee> query = entityManager.createNamedQuery("emp_name_age,Employee.class);
+	
+	employee_name.setParameter("age",25);
+
+        resultList.forEach(System.out::println)
+
+
+

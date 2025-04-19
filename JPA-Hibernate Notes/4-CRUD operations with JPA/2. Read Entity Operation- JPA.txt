@@ -1,0 +1,76 @@
+Now, let's do reading with JPA. We're going to read the employee instance we have saved/inserted previously.
+
+Reading can happen no matter mode you're in like: create,create-update,update.
+As long as there's a data available.
+-----------------------------------------------------------------------------
+CODE:
+
+Create EntityManagerFactory, EntityManager.
+This entityManager has find() method.
+
+Think about the sql queries first. If you want to find the employee with the id 1. Then how can you fetch it? You would give an id and table name in sql.
+
+- Select * from employee_data where id = 1;
+
+You're giving table name and id value.
+
+It's also somewhat similar in JPA like you give table name in SQL queries.
+Give Entity class name and id value.
+
+-> entityManager.find(Employee.class, 1);
+
+This will give us employee instance. And retrieved by JPA by Mapping this request.
+
+Introduce local variable to it and print:
+
+   Employee employee = entityManager.find(Employee.class, 1);
+   System.out.println(employee); //print employee data with the help of toString() method..
+
+-----------------------------------------------------------------------------
+
+# PRINTS IN CONSOLE:
+
+Hibernate: 
+    select
+        employee0_.id as id1_0_0_,
+        employee0_.age as age2_0_0_,
+        employee0_.dob as dob3_0_0_,
+        employee0_.Employee_Name as employee4_0_0_,
+        employee0_.Employee_SSN as employee5_0_0_,
+        employee0_.type as type6_0_0_ 
+    from
+        EMPLOYEE_DATA employee0_ 
+    where
+        employee0_.id=?
+Employee{id=1, name='Milan', age=22, dob=2025-02-24, ssn='123456789', type=FULL_TIME}
+
+-----------------------------------------------------------------------------
+We didn't do any trascation above like we did in creating: begin transcation and persist the instance.
+
+	  transaction.begin();
+//        entityManager.persist(employee); // creates employee table and insert it to database.
+//        entityManager.persist(employee1);
+//        transaction.commit();
+
+
+So, for FETCHING/READING we don't need transactions.
+
+-----------------------------------------------------------------------------
+
+Employee employee1 = entityManager.find(Employee.class, 3);
+
+-> When you try to fetch something that isn't available in database it will result in null or value will be null:
+
+Prints null for not available data:
+
+Employee Data: {id=1, name='Milan', age=22, dob=2025-02-24, ssn='123456789', type=FULL_TIME}
+Employee Data: {id=2, name='Java Brains', age=30, dob=2025-02-24, ssn='987654321', type=INTERN}
+null
+
+-----------------------------------------------------------------------------
+
+
+
+
+
+

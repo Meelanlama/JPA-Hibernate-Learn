@@ -1,0 +1,30 @@
+How relationships affect update and delete?
+
+Let's create update jpa starter class.
+
+//Updating an employee2 to subscribe to another emailGroup.
+//employee2 decides to join Python group so, it should get email from python.
+
+public class JpaStarterUpdate {
+
+	//EntityManagerFactory
+	//EntityManager
+
+	//fetching data of employee and that python email group
+	Employee employee = entityManager.find(Employee.class, 2);
+        EmailGroup emailGroup = entityManager.find(EmailGroup.class,8);
+
+        //updating
+	employee.addEmailSubscription(emailGroup);
+        emailGroup.addEmployee(employee);
+
+	//EntityTransaction, .begin,.commit
+
+	entityManager.persist(employee);
+        entityManager.persist(emailGroup);
+
+}
+
+--------------------------------------------------------------------
+
+Now, the table will be updated and employee 2 will be also added to emailGroup 8.

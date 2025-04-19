@@ -1,0 +1,34 @@
+Typically when you're updating via SQL query:
+
+UPDATE Employee_Data 
+SET EmployeeName = "Milan Don"
+Where id = 1;
+
+--------------------------------------------------------------------------------
+Now, think about how you update java objects. How you do it? Using the setter.
+
+Making change to the entity value itself.
+
+# First, we have to find which employee entity to update:
+
+       Employee employee1 = entityManager.find(Employee.class, 2);
+
+ 	//UPDATING the entity:
+        employee1.setAge(38);
+        employee1.setType(EmployeeType.FULL_TIME);
+
+With this set only, the value in database won't change. So, we should tell JPA to update the data by using transcation and persisting it.
+
+EntityTransaction transaction =  entityManager.getTransaction();
+transaction.begin();
+entityManager.persist(employee1);
+transaction.commit();
+entityManager.close();
+entityManagerFactory.close();
+
+--------------------------------------------------------------------------------
+Now, JPA will persist that employee instance. It checks that instance if it's already created or not. If it's not created in table then it'll insert it otherwise if it exists it'll just update it and save it to database.
+
+- How does it know if it's alreaady there or not?
+It'll look for the primary key. The above instance pk is 2. So it'll know using pk.
+If id is not there. It'll know and just insert the new column in table.

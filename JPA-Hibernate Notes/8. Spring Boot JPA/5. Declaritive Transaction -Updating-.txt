@@ -1,0 +1,30 @@
+Getting Transaction object,begin it, commit(), //handle it. This is called "Imperative Transaction".
+
+-- In Spring Boot, There's "Declartive Transaction". It has proxy which manages it.
+
+@EnableTransactionManagement -> Use this annotation in class.
+
+
+	@Transactional
+	public void updateEmployee(Employee employee) {
+		employee.setName("Updated Name");
+		employeeRepository.save(employee);
+	}
+
+Now, when this method is called, spring will manage the transaction for this. It'll begin, commit, handle the errors.
+
+------------------------------------------------------------------------------
+
+	Optional<Employee>  employee = employeeRepository.findById(1);
+		if (employee.isPresent()) {
+			System.out.println(employee.get());
+			updateEmployee(employee.get()); //updating name for id 1
+		}
+
+------------------------------------------------------------------------------
+
+Features:
+
+	@Transactional(rollbackOn = SQLEXCEPTION.class)
+
+-> If there's only error for Sql, then only rollback. 

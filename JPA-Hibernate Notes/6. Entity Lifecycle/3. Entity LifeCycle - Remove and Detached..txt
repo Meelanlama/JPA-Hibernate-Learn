@@ -1,0 +1,98 @@
+Now, when we remove/delete the entity.
+
+It goes to another state called "Removed" when you call remove on entity.
+
+//EXAMPLE:
+
+        Employee employee = entityManager.find(Employee.class, 1);
+        transaction.begin();
+        entityManager.remove(employee);
+
+
+- When .find() is called on that entity, it goes in "MANAGED" state.
+- And after, again .remove() is called on that entity, so it goes to "REMOVED" state.
+It's not going to be "MANAGED" in the Persistence context anymore...
+- If .removed() is called by accident on that entity then you can .persist(employee) again and it'll go to the "MANAGAED" STATE.
+
+- If entity goes to "MANAGAED" STATE, it'll again manage it's way to database.
+
+---------------------------------------------------------------------------------
+When you want to force to write some "managed" specific entities changes into database by Explicit call called: flush().
+
+When the entity is already in "Removed" state, but the data is not deleted from the database, as it may have not run the delete query yet. So you can force to delete it by using 
+flush().
+
+When UPDATING also, it's going change entity in "Managed" state, so when somebody is fetching it again, it's going to get it from the managed cache. But it may have not updated the change. So it'll result in update query in database also when using .flush()
+
+------------------------------------------------------------------------------
+
+// ONE MORE STATE: "DETACHED"
+
+This is a way in which you can remove the entity from "Managed" state but not from the "Database".
+
+		- entityManager.persist(employee);
+
+Here, it's switched to "Managed" state from "Transient" state with the help of .persist()
+
+So, whenever some data changes of employee, it's updated in "Managed" state and some time after that it will update in database.
+If you don't want to update the changed value in database and managed state. It's one time update only.
+
+Inorder to removed from "Managed" state do this:
+
+		- entityManager.detach(employee);
+
+Now, it doesn't matter what the updated value is, it's not going to be part of state world where JPA is managing.
+------------------------------------------------------------------------------
+//		- entityManager.persist(employee);
+		- entityManager.detach(employee);
+
+Question: 
+When i want to fetch value of employee? It's value is not updated. Will i get the old value of it? 
+
+Answer:
+Yes, after entityManager.detach(employee); the entity is detached, meaning changes to it are not tracked. If you fetch it again from the database, you'll get the old (persisted) value, not any updates made after detaching. To save changes, use entityManager.merge(employee);
+
+-------------------------------------------------------------------------------
+
+So again, when you want the "Detached" state entity manage again the use .merge().
+
+Example:
+
+When the employee instance is detached, it'll go to the detached state.
+Again, when you want the employee data, you'll find it: .find(employee.class,1); from the database. Again, it's managed in the "Managed" state.
+
+Now, there'll will two object of same employee: One object is in detached and One object is in Managed.
+So, When you want to manage it again use:
+
+		entityManager.merge(employee);
+
+It'll merge that two copy of employee object from managed and detched state which can possibly have two different values is merged to single one.
+
+-------------------------------------------------------------------------------
+
+THE ENTITY LIFE CYCLE STATES ARE:
+
+1. TRANSIENT: When instance is just created only
+
+2. MANAGED: When instance is persisted. Stored in persistence context cache.
+
+   DATABASE: You can flush() instance to save changes it database.
+
+3. REMOVED: .remove(entity) is no longer part of "Managed" state and data will be deleted 	   from the database after some time. This entity can again be saved by .persist()
+
+4. DETACHED: Don't delete the entity but The instance is not tracked by the JPA. And the 	value will remain the same in this state. When something is detached it's not 	removed, There could be another same entity fetched from the database and managed.
+	So, you have to merge that both entity again .merge(entity);
+
+-------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+

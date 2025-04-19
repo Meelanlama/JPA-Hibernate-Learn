@@ -1,0 +1,50 @@
+So, we are examining the hm2 ddl options in persistence xml file. And how CRUD cycle works. We have only created so far.
+
+What if we want to fetch the data we have created/inserted?
+
+First thing we have to change is:
+
+<property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+This drops and creates the tables first.
+
+-----------------------------------------------------------------------------
+<property name="hibernate.hbm2ddl.auto" value="validate"/>
+
+What the value="validate" does is it validates the entity definitions in java class and match with the table in database.It doesn't create the table but will validate the exitsing table in database by checking.
+Like,If i were to create the table what schema would it look like vs the exitsing table schema in database.
+
+It's going match the member variables with the table columns. If there's any mismatch then it'll tell you. But it's not going to change the database.
+
+-----------------------------------------------------------------------------
+<property name="hibernate.hbm2ddl.auto" value="update"/>
+
+Here, It is not going to drop the table.. 
+But going to update the table only if it's necessary.
+
+Like:
+@ColumnName(name="Ssn_Employee) -> here we changed column name and it's going to update it..
+private String ssn;
+
+-----------------------------------------------------------------------------
+<property name="hibernate.hbm2ddl.auto" value="create"/>
+
+When you first start your application, create-drop and create does exactly same thing: at first they drop and create everything from scratch.
+
+The difference is:
+- create is only going to drop one/first time while starting app..and not wiped away when context is closed.
+- create-drop is going to drop/wiped everytime the context is closed..
+
+///
+entityManager.close();
+entityManagerFactory.close();
+
+-----------------------------------------------------------------------------
+So, when we are reading,updating and deleting we are going to use the:
+value="update"
+
+We're going to comment all the code we wrote for creating entitymanager,factory,begin transcation.. And creating employee instance.
+
+-----------------------------------------------------------------------------
+# READING:
+
+Now, my goal is to connect to the database again and get the employee data from it and create employee instance of it. 

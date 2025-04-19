@@ -1,0 +1,39 @@
+# Typical JPA projects:
+- Using Spring/Spring Boot integration.
+- Using a Java EE/ Jakarta EE server
+
+The problem with both of these is they have abstraction over JPA. And they hide a lot of things JPA does behind the scene and provides a shortcut. 
+So, we need to understand it behind the scene too.
+
+# Barebones Java project
+- Add JPA to it without the magic of spring boot.
+
+# Steps:
+- Simple Java project
+- Add JPA library
+- Tell JPA library where our database exists
+- Do entity relation mapping
+- Use JPA API to persist an entity instance
+
+------------------------------------------------------------------------------------------------
+
+# Setting Up H2 Database Server:
+
+- Install H2 Database(Lightweight and easy to use)
+
+It works as in memory and server mode database.
+
+#If you want H2 to always create the database, use:
+Error aayera dimag kharab vayo, Use this in jdbc url: jdbc:h2:~/test;AUTO_SERVER=TRUE 
+
+OR, CREATE test.mv.db manually in C:meelan/.
+
+It opens server in the browser and password is empty.
+ 
+------------------------------------------------------------------------------------------------
+
+
+
+
+
+  

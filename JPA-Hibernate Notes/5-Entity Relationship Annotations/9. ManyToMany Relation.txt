@@ -1,0 +1,106 @@
+Now, we'll create a new Entity: EmailGroup(Mailing list where bunch of employee is there and that mail is sent to all employee)
+
+One employee can be part of multiple emailgroup and those emailgroup can have many employees. So, it's "Many To Many".
+
+@Entity
+public class EmailGroup {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
+    private String groupName;
+
+	//getters and setters
+}
+
+//Creating instances:
+
+ 	EmailGroup emailGroup1 = new EmailGroup();
+        emailGroup1.setGroupName("Java Discussion Group");
+
+        entityManager.persist(emailGroup1);
+
+Here, now there is no relationship between employees and group.
+
+----------------------------------------------------------------------------------------
+ 
+Now, i want to make employee1 as part of the 2 groups we have created. And employee2 as only one part.
+
+How would we implement it on Database side in Many to Many?
+
+Ans: We need to create different table for Many to Many group.
+
+TABLE NAME: EMPLOYEE_EMAIL_MAPPING
+
+Employee_Id | EmailGroupID
+1	    |	7
+1           |   8
+2	    |   7
+
+----------------------------------------------------------------------------------------
+
+How do we make this in java side?
+
+//In Employee class:
+    @ManyToMany
+    private List<EmailGroup> emailGroups = new ArrayList<>();
+
+//In EmailGroup class:
+    @ManyToMany(mappedBy = "emailGroups")
+    private List<Employee> employeeList = new ArrayList<>();
+
+// You can put "mappedBy" in any member because it's many to many it doesn't matter.
+
+// Create this method in Employee class to add employee to emailGroup list:
+
+public void addEmailSubscription(EmailGroup emailGroup) {
+        this.emailGroups.add(emailGroup);
+    }
+
+
+// Create this method in EmailGroup class to add employee in employeList:
+
+public void addEmployee(Employee employee) {
+        this.employeeList.add(employee);
+    }
+
+----------------------------------------------------------------------------------------
+
+// WRITING: HERE EMAIL GROUP HAS A LIST OF EMPLOYEES AND EMPLOYEES HAS A LIST OF EMAIL GROUPS:
+
+ 	EmailGroup emailGroup1 = new EmailGroup();
+        emailGroup1.setGroupName("Java Discussion Group");
+        emailGroup1.addEmployee(employee);
+        emailGroup1.addEmployee(employee1);
+        employee.addEmailSubscription(emailGroup1);
+        employee.addEmailSubscription(emailGroup1);
+
+        EmailGroup emailGroup2 = new EmailGroup();
+        emailGroup2.setGroupName("Python Tech Group");
+        emailGroup2.addEmployee(employee);
+        employee.addEmailSubscription(emailGroup2);
+
+
+// If there no @ManyToMany mapping in those list of groups then JPA doesn't know they are the same thing: so it'll create two join tables instead of one.
+
+----------------------------------------------------------------------------------------
+SELECT * FROM EMPLOYEE_DATA_EMAILGROUP;
+EMPLOYEELIST_ID |  EMAILGROUPS_ID  
+1			7
+1			7
+1			8
+
+If @ManyToMany mapping is there then it'll only create one table like this: If it's not there then it'll create two same join tables with different name as it doesn't know its tracking same data.
+
+----------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+

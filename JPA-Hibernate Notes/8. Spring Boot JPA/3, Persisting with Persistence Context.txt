@@ -1,0 +1,71 @@
+@Service
+public class EmployeeService {
+
+    @PersistenceContext
+    private EntityManager entityManager;  // Inject EntityManager directly
+
+    @Transactional
+    public void insertEmployee() {
+        Employee e = new Employee();
+        e.setAge(23);
+        e.setName("Milan");
+        e.setDob(new Date());
+        e.setSsn("1234567890");  // Set required 'ssn' field
+
+        entityManager.persist(e);  // Transaction managed by @Transactional
+    }
+
+    public void findEmployee() {
+        Employee e = entityManager.find(Employee.class, 1);
+        System.out.println(e);
+    }
+}
+
+Explain:
+
+- @PersistenceContext now injects an EntityManager, which is managed by Spring.
+- No need to create an EntityManager or handle transactions manually. The @Transactional annotation ensures the method runs within a transaction.
+
+-----------------------------------------------------------------------------------------------------
+
+@SpringBootApplication
+public class SpringBootJpaExampleApplication {
+
+	private final EmployeeService employeeService;
+
+	//constructor injection and calling the method of service class when running
+	public SpringBootJpaExampleApplication(EmployeeService employeeService) {
+		this.employeeService = employeeService;
+	}
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringBootJpaExampleApplication.class, args);
+	}
+
+	@PostConstruct
+	public void start() {
+	employeeService.insertEmployee();  // Now runs in a managed transaction, 
+					  //runs method when spring starts
+	}
+}
+
+-----------------------------------------------------------------------------------------------------
+
+You can get error as you're sharing the entity manager and it's not thread safe. The same entity manager will read,write and delete for us so we can get error for not handling transaction.
+
+So, use: 
+
+    @PersistenceContext(type = PersistenceContextType.EXTENDED)
+
+I'm managing the transaction for myself.
+
+---------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,108 @@
+So what the relationship between Employee and AcessCard will look like?
+It really depends whether you're looking at the database side of things or Java.
+This is where embedence mismatch come in place.
+
+------------------------------------------------------------------------------
+How do you link the two tables? Like employee id 1 is associated to accesscard with id 3.
+
+The typical way to do that is by adding column to the "employee_data" table with access_id with the FK.
+
+This is how it works in database side.
+
+----------------------------------------------------------------------------------------
+ private int accessCardId;
+
+creating member variable in 'employee class" and map it with the table which creates column.
+
+And removing the autogeneration id from the acccesscard id member variable. And setting manually.
+
+- card1.setId(1);
+- employee1.setAccessCardId(card1.getId()); 
+// This is basically taking id of card1 value and setting it to employee1 instance.
+
+It kinda does the work.. and map it to the table. 
+This is just a value mapped and not really a foreign key relationship.
+
+# This is done in database side..
+
+----------------------------------------------------------------------------------------
+The instances between the two classes should be linked in java side. So how do you do it?
+
+- First, remove the created member variable:  private int accessCardId; in employee class.
+
+- Add in employee class : private AccessCard card;
+Generate getters/setters.
+
+- And now when we're managing the relationship. We're not just getting id. We'll get the whole instance of card.
+
+- EXAMPLE:
+ employee1.setAccessCard(card1);
+
+// Creating a new instance for Access Card
+        AccessCard card1 = new AccessCard();
+        card1.setIssuedDate(new Date());
+        card1.setActive(true);
+        card1.setFirmwareVersion("1.0");
+        employee1.setAccessCard(card1);
+
+The whole card is now linked to employee instance. 
+Now, these two instances are kinda related/linked.
+
+We can get the card of particular employee by:
+        employee1.getAccessCard();
+
+--------
+This is perfect,but JPA wouldn't know what to do now. It'll just get the value for all primitive types and insert.
+
+But what about: private AccessCard card;
+
+How is it gonna insert the card object? AccessCard type  into the database.
+
+It knows how to deal with string,int and enums. And insert it.
+
+###
+It' gives error saying: Could not determine type for: com.tutorial.AccessCard, at table: EMPLOYEE_DATA,
+
+----------------------------------------------------------------------------------------
+
+So, now JPA needs our help. We need to tell it don't insert the AccessCard itself there.
+But insert only id like we did above at first. 
+
+So, Telling JPA this is a relationship.. Don't insert this directly and it has it's own table. Just add relationship to it and save it only.
+
+There are different types of relationships in DB like:
+1-1,1-M,M-1,M-M
+
+These relationship indicates what the ordinality is. Like one to one mapping can only have one object to one and vice versa. Like: I can have only 1 license number and that number should be only available to me. 1-1 Mapping 
+Like saying one employee can have only one access card. And also access card can have only one employee.
+
+##
+There's annotation called:
+    @OneToOne
+    private AccessCard accessCard;
+
+Now, JPA knows i don't need to insert the all the information of accessCard. This is actually a relationship. So, it'll go the entity class of AccessCard. And map the key.
+
+----------------------------------------------------------------------------------------
+
+    @OneToOne
+    private AccessCard accessCard;
+
+Now, after the relation ship this accessCard:
+BECOMES 
+        accessCard_id integer,
+
+Of the employee_table in database.
+
+//
+foreign key (accessCard_id) 
+       references ACCESS_CARD
+
+This column now references to the acess_card table.. And id will be inserted to it via fk.
+
+----------------------------------------------------------------------------------------
+Now, we have the relationship modelled in java side via JPA.
+Like ideally we model it in database side by having FK.
+
+We have now ideal java code and ideal database schema just because of this JPA mapping.
+

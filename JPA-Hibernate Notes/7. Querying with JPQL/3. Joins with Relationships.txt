@@ -1,0 +1,33 @@
+You can combine data from two tables.
+
+Now, you need query: Employee who have valid accesscard. So, we need to combine data of access_card and employee_data
+
+Example:
+
+SELECT e.* FROM EMPLOYEE_DATA e
+JOIN ACCESS_CARD a
+ON e.ACCESSCARD_ID = a.id
+AND a.isactive = true;
+
+Here, we'll only get employee data who have valid access card in SQL.
+
+----------------------------------------------------------------------------
+
+IN JPQL, THERE'S MANY POSSIBILITES BECAUSE THE JOIN IS ALREADY DONE IN JAVA SIDE.
+
+FOR SUCH JOIN CASES: JPQL IS WAY BETTER THAN SQL:
+
+-- EXAMPLE:
+
+ "select e from Employee e where e.accessCard.isActive = true ",
+
+It's gonna print the same result where prints employees whose card is valid.
+This query does the same as JOIN in above SQL query.
+
+----------------------------------------------------------------------------
+You don't have to do JOIN in lot of situations in JPQL.
+
+If you wanna do the JOIN then:
+
+"select e from Employee e JOIN AccessCard a ON e.id = a.id";
+

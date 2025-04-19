@@ -1,0 +1,32 @@
+IN JPA CREATE REPOSITORY:
+
+Spring Data JPA provides implementations for repository classes which basically allow you to all the operations by itself for different entities/classes type.
+
+@Repository
+public interface EmployeeRepository extends CrudRepository<Employee,Integer> {
+}
+
+Now, You @Repository for employee entity which knows how to do all the CRUD operations. 
+The Generic Type is: Employee(Entity type), Integer(id data type).
+
+------------------------------------------------------------------------------
+
+	@Autowired
+	EmployeeRepository employeeRepository
+
+
+	@PostConstruct
+	public void start() {
+	
+	Optional<Employee>  employee = employeeRepository.findById(1);
+
+		if (employee.isPresent()) {
+			System.out.println(employee.get());
+		}
+	}
+
+This is all using JPA under the hood.
+
+------------------------------------------------------------------------------
+
+This is how you use @Repository only and can do CRUD operations without Entity Manager.

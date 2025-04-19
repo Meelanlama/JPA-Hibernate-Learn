@@ -1,0 +1,89 @@
+So, the second important impliations of relationship is its direction. Like, who owns the relationship?
+
+Example:
+
+AccessCard card = entityManager.find(AccessCard.class, 3);
+System.out.println(card);
+
+- This card instance only prints the all details of the card.
+But it won't print the data of employee like employee instance printed both datas.
+
+So, How to print the Employee data also with the card instance?
+
+Create Employee member variable in AccessCard class like:
+
+@OneToOne
+private Employee owner;
+
+- Add SetOwner too again in card instance.
+
+// Creating a new instance for Access Card
+        AccessCard card1 = new AccessCard();
+        card1.setIssuedDate(new Date());
+        card1.setActive(true);
+        card1.setFirmwareVersion("1.0");
+        card1.setOwner(employee);
+        employee.setAccessCard(card1);
+
+-- Now, the referenced has been mapped to @OneToOne.
+
+//
+create table ACCESS_CARD (
+       id integer not null,
+        firmwareVersion varchar(255),
+        isActive boolean not null,
+        issuedDate timestamp,
+        owner_id integer,
+        primary key (id)
+    )
+
+- It'll create the owner_id in access_card table and link owner_id with that particular card.
+
+We need to set card with owner and owner with card.
+
+Here, we don't have deadlock because JPA will create sequence for it.
+----------------------------------------------------------------------------------------
+
+What you have now is "Two way relationship". Employee is related to accesscard and card is related to employee. 
+
+//CODE:
+
+AccessCard card = entityManager.find(AccessCard.class, 3);
+System.out.println(card.getOwner());
+
+Now, you can get the employee data with the help of card also.
+----------------------------------------------------------------------------------------
+
+-- But the problem with this is the access card table is joined multiple times because
+JPA doesn't know the relationship is same. It's TWO WAY.
+
+Here is, what it does: it will go AcessCard class first. It'll see it has @OneToOne relation with "Employee Owner": member variable of AcessCard.
+And it will go the Employee class again: And the Employee class also has @OneToOne relation with AccessCard card: member variable of Employee. it'll try to get the accesscard.
+
+Then, it'll realize it's the samething and don't have to fetch again.
+
+So, we need to tell the JPA this @OneToOne Mapping is the reverse of the previous @OneToOne mapping.
+----------------------------------------------------------------------------------------
+
+- Making Primary:
+
+    @OneToOne(mappedBy = "accessCard")
+    private Employee owner;
+
+    @OneToOne
+    private AccessCard accessCard;
+
+Now, this is mapped by whatever you see as accessCard in AccessCard class. This is the same mapping as the Employee owner.
+
+In simple: It's saying this relationship in this class is the same as the other relationship in that another class. 
+----------------------------------------------------------------------------------------
+
+- This is the directionality of the relationship.
+- You can have two direction relationship where one is refering to another. But, the above one is refering to same thing.
+- The above is bi-directional "OneToOne" Mapping. Where you can get the data from both sides(from accesscard:we can get data of employee|| from employee: can get data of card)
+
+
+
+
+
+

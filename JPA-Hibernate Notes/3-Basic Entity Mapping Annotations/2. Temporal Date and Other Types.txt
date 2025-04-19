@@ -1,0 +1,73 @@
+The default behaviour for primitive data. When you have int it translate to numeric type in database.
+
+It's also same for wrapper class like: Integer, BigInteger. It's also map to numeric type in database.
+
+String also behaves as a primitive types and maps to VARCHAR in database.
+
+When you have these primitive types: It automatically maps to corresponding type.
+
+-------------------------------------------------------------------------------
+@Temporal(TemporalType.DATE)
+private Date dateOfBirth;
+
+@Temporal defines what kind of data you want/trying to save. And it's going to save in database as defined. It has TIMESTAMP, TIME also. 
+It can save in database as date column,time column or both.
+
+@Temporal(TemporalType.TIME),@Temporal(TemporalType.TIMESTAMP)
+
+-------------------------------------------------------------------------------
+
+# DEALING WITH ENUM TYPE:
+
+public enum EmployeeType {
+    PAYROLL_EXEMPT,FULL_TIME, PART_TIME, INTERN;
+}
+
+- Now, i need to map member variable of this enum type.
+
+private EmployeeType type;
+
+// we can set it like this as it default:
+employee.setType(EmployeeType.FULL_TIME);
+
+But by default "type" column is saved as integer in database. And Fulltime value is saved as 0 in that column. The positions(ordinals) of enum is saving here.
+If i saved all data using the positions of enumn.
+
+And then later,There is a problem, What if i add: PAYROLL_EXEMPT at first in the enum. The ordinals change. And all the data that got saved are invalid.
+
+This is the problem for handling enums in default way, which is saving ordinals.
+
+-------------------------------------------------------------------------------
+To avoid this problems, you can save String itself instead of ordinals by adding
+@Enumerated(EnumType.Ordinal) -> This the default way of taking enums.
+
+    @Enumerated(EnumType.STRING) -> It'll save the string.
+    private EmployeeType type;
+
+Now, when using String in enum, type will change to varchar and saves it original enum value instead of it's ordinal.
+
+- There's is also another problem what if we change FULL_TIME to FULLTIME in enum. Data will change in db. older data will contain previous enum data value. 
+This is the problem, there's no solution.
+
+- So, when choosing to store enum, pick one of these carefully and stick to it:
+1. Pick String Type, if you think order will change in enum and name won't be changed.
+2. Pick Ordinal Type, if you think order won't change and might have to change name and never change the order. Don't change/remove enums and add new enums below it.
+
+-------------------------------------------------------------------------------
+
+private String debugString;
+
+When you don't want something to be saved in database.
+Like the above debugString, it's useful for your java code. But would never get translated or persisted to the database side. And just wanna save it for application purpose. But not in the database.
+
+If you leave it default member variable it will save in database.
+To exclude this: Mark that memeber variable as:
+
+@Transient -> This is transient only for JPA
+private String debugString;
+
+-------------------------------------------------------------------------------
+
+
+
+

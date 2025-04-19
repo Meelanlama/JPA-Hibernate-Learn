@@ -1,0 +1,30 @@
+  	String minAge = "25;DROP Table Employee_TABLE";
+       TypedQuery<Employee> query = entityManager.createQuery(
+                "select e from Employee e where e.age > " + minAge,
+                Employee.class);
+
+
+What this query does is, When the first query is finished. It'll run the second query like this.
+So, appending String is a bad idea. 
+We need to make sure there's only one query run and they don't do mischiefs like this.
+
+----------------------------------------------------------------------------
+
+SO, JPQL HAS CONCEPT CALLED PARAMATER.
+
+CODE:
+		 String minAge = "25;DROP Table Employee_TABLE";
+
+                "select e from Employee e where e.age > :minAge",
+       
+		query.setParameter("minAge", minAge);
+
+
+Now, when paramater is set it knows that your intent is to run a single query only. So, setting the second query like DROP won't run as it detects the attached query.
+
+----------------------------------------------------------------------------
+
+That minAge type should int. But this is for demo purpose.
+
+When you're dealing with the variables. Always makesure use parameters for it.
+

@@ -1,0 +1,55 @@
+- Created a persistence context in xml
+- Created an entity and mapped it to the database using JPA annotations
+
+Let's look at individual properties in xml file. Meta data about the connection and behaviour.
+
+# Persistence XML contains the configuration like:
+- Database connection string
+- Username and password
+- SQL related options
+- Transaction related options
+- Provider configuration - like "automatic" behaviour
+
+-----------------------------------------------------------------------------------
+- It start's with Persistence Unit: It contains meta data about persistence context
+
+    <persistence-unit name="myApp" transaction-type="RESOURCE_LOCAL">
+
+We create EntityManagerFactory from this persistence unit. We Use this persistence unit while creating EntityManagerFactory.
+
+And, From EntityManagerFactory we create EntityManager which is responsible for creating and managing entities.
+
+Another transaction-type is JTA.Which helps in multiple datbases.
+
+- <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+This is the Implementation of JPA also referred to as Instance Provider
+
+- Next, we have this <properties> node which allows to configure how hibernate behaves: like providing : database url,driver,user,password
+
+- Inside <properties> we are also configuring hibernate:
+  
+// tells to show sql queries in console. If false then sql queries won't show.
+<property name="hibernate.show_sql" value="true"/>                                  
+
+//going to format sql queries that shows in console
+<property name="hibernate.format_sql" value="true"/>
+
+The above two are for development purpose.
+
+// A dialact is a sql grammar that JPA uses to connect to database. There's a small difference in sql queries format for different databases(Like MYSQL,POSTGRES,H2). So use the (H2) dialact for the database we are connecting/using.
+<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+
+//Telling what automatic behaviour we want hibernate to have while converting from hibernate entitiy annotation to DDL(Data definition language).Want update only table or creating and dropping table.
+<property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+
+
+
+
+
+
+
+
+
+
+

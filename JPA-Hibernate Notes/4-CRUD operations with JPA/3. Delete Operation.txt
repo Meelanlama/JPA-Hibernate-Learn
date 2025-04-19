@@ -1,0 +1,35 @@
+Now, let's look at DELETE. It has similar pattern to update.
+
+DELETE FROM EMPLOYEE_DATA WHERE ID = 1;
+
+WITH JPA AND JAVA WAY OF DOING IS: FIND THE DATA WE NEED TO DELETE LIKE:
+
+//find employee instance with id of 3.
+Employee employee3 = entityManager.find(Employee.class, 3);
+
+//Deleting
+entityManager.remove(employee3);
+
+//BEGIN TRANSACTION AND CLOSING IT, deleting the instance
+
+EntityTransaction transaction =  entityManager.getTransaction();
+transaction.begin();
+entityManager.remove(employee3); // remove should be below transaction begin
+transaction.commit();
+entityManager.close();
+entityManagerFactory.close();
+--------------------------------------------------------------------------------
+
+Hibernate: 
+    delete 
+    from
+        EMPLOYEE_DATA 
+    where
+        id=?
+--------------------------------------------------------------------------------
+
+STEPS:
+1. FIND THE EMPLOYEE INSTANCE.
+2. PASS IT TO REMOVE IT using .remove() below transaction.begin().
+
+--------------------------------------------------------------------------------

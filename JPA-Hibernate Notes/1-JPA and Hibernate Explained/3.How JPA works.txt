@@ -1,0 +1,67 @@
+- Java Peristance API:
+Standarized as a part of the Java/ Jakarta EE stack
+
+Describes the API,not the implementation.
+Also called instance provider
+
+What are the steps to add a JPA?
+
+Using JPA: Adding an implementation, Just like hibernate but here we add JPA Impl
+
+Java App <---> JPA Impl <---> JDBC <---> DATABASE
+
+--------------------------------------------------------------------------------------
+There are many JPA implementations:
+-Hibernate
+-Toplink
+-EclipseLink
+-Apache OpenJPA
+
+But most of the times, 99% time we are using Hibernate. But there are other options.
+
+--------------------------------------------------------------------------------------
+When you add a JPA Impl instead of hibernate as we did above.
+Now, in our code we are not calling Hibernate APIs but we'll call the JPA APIs.
+
+We're going to deal with classes and objects only, not tables and rows.
+
+JPA is for relational database only.
+
+# What's the big deal with JPA? And, What's the problem with using SQL and dealing with JDBC?
+
+1. Developer Productivity You can build and write code faster than using JDBC. Super fast to write that code.
+2. Database Independence: You are working with MYSQL or PostGres SQL, They have some what different sql queries and dependent on database we use. So if you wanna switch to differnt database from mysql to postgres, you have to change code like connection,driver,queries in jdbc.
+With JPA you don't have to deal with that. JPA APIs is same irrespective of what database is.
+3. Caching and performance: So there's some level of caching that happens automatically which minmizes read and write. So, it won't fetch from database each time. Since, it know to fetch from the cache or database.
+4. For Large applications: You need to focus on the problem domain. SQL is lower level primitive.But yes, ...SQL is sometimes faster.
+
+--------------------------------------------------------------------------------------
+# Learning JPA
+- Learn how to map
+- Learn how to invoke CRUD actions for objects
+
+# Tricky Parts
+- Modeling relations (One class on java side can manifest as 10 tables on database)
+- Interacting with relations(How,when and how much we fetch)
+- Implementing transactions
+- JPQL - 'freeform' querying'
+
+--------------------------------------------------------------------------------------
+Is it worth it to learn JPA?
+
+- For simple database interactions, JDBC is still preferred. Like your app has 2-3 tables.
+- Enterprise apps are compex and model heavy so Jpa is prefferd.
+- Performance awareness and optimization needed.
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,93 @@
+When you persist in hibernate, it does when it wants. It runs SQL queries when it wants.
+
+So, how that work behind that scene?
+
+-- Persistence unit is your configuration and JPA implementors like Hibernate it creates a peristence context when it starts up.
+
+-- What is persistence context?
+When you save using Hibernate API (.persist)
+
+For demo we created a new class for write:
+
+-- <property name="hibernate.hbm2ddl.auto" value="create"/>
+
+public class JpaPersistenceContextDemo {
+
+  	Employee employee1 = new Employee();
+        employee1.setName("New Employee");
+        employee1.setAge(23);
+        employee1.setSsn("987654321");
+        employee1.setDob(new Date());
+        employee1.setType(EmployeeType.INTERN);
+
+        System.out.println("******* Created Employee Instance *******");
+
+---- This is only creating instance at first before hibernate starts. Because we have not called hibernate API yet.
+
+
+//
+	transaction.begin();
+        System.out.println("******* Starting Transaction *******");
+
+-- This transaction will only start when all the tables are created/ dropped using DDL in our database schema because hibernate knows our entities and it'll create a table for them because the value is "create".
+
+-- We are not using all of the schema tables only employee table but also hibernate is creating all schemas.
+
+//
+ 	transaction.begin();
+        System.out.println("******* Starting Transaction *******");
+
+	Employee employeeFound = entityManager.find(Employee.class,1);
+	sout(employeeFound);
+ 	System.out.println(employee1);
+        System.out.println(employee1==employeeFound); //TRUE
+
+        entityManager.persist(employee1);
+        System.out.println("******* After Employee Persisted *******");
+        transaction.commit();
+        System.out.println("******* Transaction Completed *******");
+
+
+--PRINTS:
+
+******* Starting Transaction *******
+Hibernate: 
+    call next value for hibernate_sequence
+******* After Employee Persisted *******
+Hibernate: 
+    insert 
+    into
+        EMPLOYEE_DATA
+        (accessCard_id, age, dob, Employee_Name, Employee_SSN, type, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+******* Transaction Completed *******
+
+------------------------------------------------------------------------------
+
+What happened above is data is not inserted into table until transaction.commit() is called. So insert will happen in .commit() method. Not in the persist()
+
+-- But when you try to fetch data of employee before .commit() or insert is happened,
+
+Employee employeeFound = entityManager.find(Employee.class,1);
+sout(employeeFound)
+
+-- It'll fetch the value of employee.
+-- What EntityManager is doing is it's holding a cache of employee instance. So, whenever someone wants is updated value it'll provide it from the cache.
+But it'll insert in the database in most optimal way.
+
+       System.out.println(employee1==employeeFound); //TRUE
+
+-- The data before insert is done is getting from the cache. That's why they are same. They maintain the cache and make sure database read and write are in optimal way.
+
+------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+

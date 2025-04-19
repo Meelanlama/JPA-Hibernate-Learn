@@ -1,0 +1,85 @@
+Widely used. Used in RDMS and enterprise applications.
+
+# Most common types of technlogies used by JPA:
+- Spring Boot application with DB (It's most popular support for spring boot)
+- Java/Jakarta EE application with DB
+- Microservices(each service with DB)
+
+# How to learn:
+- If you're done with this course then read book : Pro JPA 2 in JAVA EE 8, JAVA PERISTANCE WITH HIBERNATE.
+
+# Next steps:
+- Follow this course, Build a project, Pick one of the book as reference, Read one book end to end.
+
+# OBJECT RELATIONAL MAPPING(ORM):
+
+Java apps with DB: Connect java application to relational database, previously by using the JDBC.
+
+Java appps with DB by using JDBC:
+1. Connect to jdbc
+2. Data access services
+3. Data access objects (DAO)
+
+Business service <-> DTO <-> Data Services <-> JDBC <-> <- DATA BASE
+--------------------------------------------------------------------------------------
+
+# The CRUD problem:
+
+Employee class:
+fistName,lastName,department, address:
+
+Employee Table:
+fistName|lastName|department|address:
+
+Each employee in table row in an instance of employee class.
+
+# Read Operation
+Desired result: Collection of Employee instances
+
+1. Prepare SQL query
+2. Run the query(We'll get the data in resultSet)
+3. Loop through that result set that has been fetched.
+4. Create a new instance of Employee per row(One row corresponds to one employee instacne. We're gonna do that one by one)
+5. Extract each column and assign to new instance. (Assign it to member variable of employee instance like firstName,lastName,etc).
+6. Put instance in a collection.
+7. Handle errors
+
+We're gonna do a lot to the get the employee.
+
+# Write Operation
+Desired result: Employee object added/upated as a row in Employee table.
+
+1. Get the all attributes of instance.
+2. Prepare a sql query (Insert)
+3. Manage the keys.
+4. Run the query
+5. Manage Transactions
+6. Handle erros.
+
+You have to do the ORM. Objects to table rows. Whether, you'll do it yourself or framework will do it. This has to be done.
+
+--------------------------------------------------------------------------------------
+JPA is meant to do object relational mapping.
+The way to do it: 
+
+- Establish mapping using Java API. Here are the annotations, which class property corresponds to which columns of the table. It'll write query.
+
+One class mapping to one table: This is easy.
+
+What if?
+
+You have employee class like before: fistName,lastName,department, address:
+
+The firstname,lastname and department goes in Employee table:
+
+But what about the address property in employee class: We have Employee address table which is basically like mapping of employee address. This adress table has id and address of employee.
+
+So, it's like normalization in database. It's not simple. At first all the property is mapped into employee table but for address you have to map it into another table.
+The mapping becomes little tricky.
+
+# This is called impedence mismatch. The emphasis is on relations.
+There's always a key which connects one table to another table.
+
+We can map different tables which is related to eachother(Like employee table, employee manager table, employee address table) using JPA API.
+
+

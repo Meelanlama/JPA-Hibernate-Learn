@@ -1,0 +1,51 @@
+It's super useful when you're working with multiple entities and repositories.
+
+	@Transactional
+	public void updateEmployeeAndAccessCard(){
+		updateEmployee(e);
+		accessCardRepository.save(a);
+	}
+
+	@Transactional(value = Transactional.TxType.MANDATORY)
+	public void updateEmployee(Employee employee) {
+		employee.setName("Updated Name");
+		employeeRepository.save(employee);
+	}
+
+//this method should do two update one to employee repository and another to access card repo. If one fails then it shouldn't be saved. Both should be updated inorder to save.
+It should be rolled back if both changes are not there.
+
+	@Transactional(value = Transactional.TxType.REQUIRED)
+	@Transactional(value = Transactional.TxType.NEW)
+	@Transactional(value = Transactional.TxType.NOT_SUPPORTED)
+	@Transactional(value = Transactional.TxType.MANDATORY)
+
+These are the different ways you can handle transaction. If the methods contain both transactional declared, so it'll tell to handle which method can handle transaction. 
+As if both methods handle the transaction we'll get error. 
+It's called race-condition error.
+
+------------------------------------------------------------------------------------
+
+# READ ONLY TRANSACTION:
+
+Sometimes, you're reading entities only and you need transactions.
+
+Example:
+When you're reading 3 entities, There can be race-condition after reading only one.
+
+There's a way you can specify "READ ONLY" in TRANSACTIONAL.
+
+@Transactional(readOnly = true); -> It'll improve in performance.
+
+------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+

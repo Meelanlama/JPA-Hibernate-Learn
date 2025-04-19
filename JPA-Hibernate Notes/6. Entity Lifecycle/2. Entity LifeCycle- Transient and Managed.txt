@@ -1,0 +1,57 @@
+The cache is stored in persistence context.
+Like persistence context is a big container and cache is a samall container inside it. Think of it like SPRING CONTAINER.
+
+So, JPA provider is working with the database and persistence context interact with it.
+But it always don't interact with it and figures out an ideal time to save/retrieve to database by interacting.
+
+It doesn't touch the database frequently and provide from the saved cache(reference) stored in context when needed.
+
+------------------------------------------------------------------------------
+A single entity goes through multiple states. And, in each state describes the entity in the context of the database/persistence context.
+
+1. It typically starts out with "Transient" state. It's when you have entity which has been created as a class or new instance of class and nothing has happend to it after that.
+
+- Like we created employee object and set its value. But nothing related to JPA instance is done like: creating entityManager,factory,begin transaction, persist and commit.
+This is referred as "Transient" state..
+
+2. Now, We can persist that employee entity. The employee goes to the state called "Managed". So, JPA will now manage this entity. Like it'll put it under the persistence context and will manage it like: saving, fetching the value from database. Managing it's cache.
+- This happens when you do: entityManager.persist(employee1); // "MANAGED STATE"
+
+--- When you fetch the entity back, it might just get from "Managed/Cache" or "Database".
+It's in managed state doesn't mean it's gone to the database already.
+
+-- IT'S FLOW:
+
+[TRANSIENT] .persist(employee1) -------> [MANAGED] -------> [DATABASE]
+
+------------------------------------------------------------------------------
+
+// IN THE CASE OF READ USECASE:
+
+	EmailGroup emailGroup = entityManager.find(EmailGroup.class, 7);
+        System.out.println("*** GOT EMAIL GROUP, Now accessing employee list");
+        System.out.println(emailGroup.getEmployeeList());
+
+-- You're not creating entity and persisting it. 
+-- But you'll get "Managed" entity by asking JPA to find it's value. It finds it value from the database and JPA creates an instance, Makes it managed. Now, it'll give you that managed entity in result.
+
+-- This is another way for getting the "Managed" entity. This can be get from Database.
+
+-- IT'S FLOW:
+
+[DATABASE]  --->  JPA Fetches Entity  --->  [MANAGED]  --->  Returns to Application.
+
+# Key Takeaways:
+- entityManager.find(Class, id) ensures you get a Managed entity.
+- If JPA already has the entity in the Persistence Context, it avoids hitting the database.
+- Any changes made to the Managed entity will be automatically synchronized with the database when a transaction commits.
+
+------------------------------------------------------------------------------
+
+
+
+
+
+
+
+

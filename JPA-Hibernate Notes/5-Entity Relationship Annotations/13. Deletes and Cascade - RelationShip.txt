@@ -1,0 +1,74 @@
+Let's look at what happens when you delete an entity which is a part of relationship.
+
+public class JpaStarterDelete {
+
+	//EntityManagerFactory
+	//EntityManager
+
+ 	//Deleting an instance of employee
+        Employee employee = entityManager.find(Employee.class, 1);
+
+        //transaction.begin(),COMMIT;
+
+        entityManager.remove(employee);
+}
+
+
+-- Here, employee1 is associated with other relationships too like paystubs,email subscriptions,accesscard.
+
+-- What happens to them? Like email subscription doesn't matter if it's deleted.
+But the data of paystub should be there for a future record.
+
+-- By default, nothing work as it will give an exception error: constraint violation, REFERENTIAL INTEGRETY(fk related) to the paystubs.
+It doesn't have error for emailsubscription but it gives error for paystubs as its related.
+
+-- If we delete, employee2 which doesn't have relation with payStubs. It'll delete the employee instance without error. So, it'll delete employee details from employee table alongside, data from email. But the data of accesscard of employee2 will be there.
+
+This is default behaviour for how the relationship is handled. If relationship has the mapping on separte table. The owning table("paystubs") that has relationship.
+Deleting the relationship involves deleting data from paystub too. so it won't work. This delete the data from owning table("Paystub) which involves in dataloss. So, it's not gonna do it. 
+
+//Paystub table:
+
+ID  	PAY_PERIOD_END  	PAY_PERIOD_START  	SALARY  	PAYSTUB_FOR  
+5	2025-02-26	        2025-02-26		100000			1
+6	2025-02-26	        2025-02-26		200000			1
+
+
+So, for deleting the data of employee1 it needs to delete the data of this table too. Here, there's no data of employee2 so, that instance can be deleted
+
+-- However, deleting an employee involes in deleting the data from join table like email subscription table. It'll delete the relationship to an email group as it just maintaing the data.
+
+--------------------------------------------------------------------
+
+So, how can i delete the employee1? You can tell JPA to do cascade delete.
+Like delete employee1, if there's paystubs or others that are depended on employee1 then go delete thoses depended paystubs too.
+
+-- There are @Annotations to help it.
+
+//IN PAYSTUB CLASS:
+
+    @ManyToOne    (//cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "paystub_for")
+    private Employee employee;
+
+-- Now, this cascade = CascadeType.REMOVE tells:
+Whenever the paystubs is removed, Delete the employee of that paystubs.
+This is not a good idea because whenever paystubs is removed, you can't delete an employee. 
+So remove that cascade annotation from here.
+
+//IN EMPLOYEE CLASS:
+
+   @OneToMany(mappedBy = "employee",cascade = CascadeType.REMOVE)
+    private List<PayStub> payStub = new ArrayList<>();
+
+-- Now in otherside: 
+Whenever employee is removed, Delete the paystubs of that employee.
+So, keep the cascade annotation here.
+
+--------------------------------------------------------------------
+We can now delete the employee1 instance because of the cascade remove in the paystub of the employee as it will remove it when employee is gone.
+
+-- (cascade = CascadeType.PERSIST): This will also cascade all the persist, whenever you save/persist employee only. All its paystubs is also persisted automatically with this.
+
+
+

@@ -1,0 +1,49 @@
+What's the difference between hibernate and jpa?
+
+- Think of difference between "interface" and it's "implemenation class". It's implementaion does all of the work. But interface provides the picture of API to a consumer.
+
+JPA is the interface and hibernate is the implementation.
+
+So, hibernate is open source ORM framework. You can do all those things like map employee instance with different tables and go save this. It'll know excatly which SQL queries to run to add these to database.
+
+There are the steps to use Hibernate:
+
+1. Add a library to your class path.
+2. Map your classes to database tables.
+3. Map your member variables to columns names of your tables.
+4. Use Hibernate APIs to save/update/retrieve.
+
+Once you have done mapping you don't care about database side anymore.
+
+# JAVA APPS WITH HIBERNATE:
+
+You add hibernate between jdbc and your app.
+
+Java App <-> Hibernate <-> JDBC <-> DATABASE
+
+You don't deal with jdbc apis anymore. You deal with hibernate apis. And hibernate is going to translate that to actual jdbc call and sql queries. 
+
+--------------------------------------------------------------------------------------
+Mapping:
+
+Employee class <---> Employee_table
+firstName  <--->  FIRST_NAME
+lastName  <--->  LAST_NAME
+
+This mapping can have done in couple ways:
+1. XML Configuration
+2. Java Annotations(Popular and Modern)
+--------------------------------------------------------------------------------------
+
+Hibernate is one of the several ORM solutions. This is popular but, this is not the only one framework.
+What if hiberante framework goes away tommorow? It's scary to rewrite the enterprise code again. So the solution is:
+
+Jakarta / Java EE has Standarized ORM APIs. So, tomorrow if Hibernate goes away and another framework comes in. As long as that framework is implementing the Standarized ORM APIs. You can switch and don't have to rewrite the code of hibernate.
+
+That Standarized ORM APIs is: JPA(Java Persistance API).
+
+--------------------------------------------------------------------------------------
+
+
+
+

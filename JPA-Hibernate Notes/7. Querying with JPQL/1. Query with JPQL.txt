@@ -1,0 +1,40 @@
+        EmailGroup emailGroup = entityManager.find(EmailGroup.class, 7);
+
+This find method works for one class and when you know the id of entity you want. This works for the one entity.
+
+But, SQL is very flexible. The JPA methods are not flexible as SQL.
+
+-- JPQL STANDS FOR "JAVA PERSISTENCE QUERY LANGUAGE" which allows queries for entities rather than the tables.
+
+Rather than doing: SELECT * FROM EMPLOYEE_DATA;
+WE DO: SELECT e FROM EMPLOYEE e; [employee is entity/class]
+
+------------------------------------------------------------------------------------
+// CREATE A NEW CLASS FOR JPQL:
+
+public class JpaJPQL {
+main method(){
+	// EntityManagerFactory, ENTITYMANAGER
+
+TypedQuery<Employee> query = entityManager.createQuery("select e from Employee e",Employee.class);
+        List<Employee> employees = query.getResultList();
+        employees.forEach(System.out::println);
+}
+
+-- WE don't deal with tables anymore, so selecting from employee entity class with alias. Second argument is passed because we'll get back TypedQuery and it knows itself that query is for Employee type not the others.
+
+-- It's same like: SELECT * FROM EMPLOYEE; and prints all the data from that table/entity class.
+
+
+// ANOTHER QUERY: Where employee age is greater than 20:
+
+TypedQuery<Employee> query = entityManager.createQuery("select e from Employee e where e.age > 20",Employee.class);
+
+
+// ORDER BY AGE IN DESCENDING:
+"select e from Employee e order by e.age desc"
+
+------------------------------------------------------------------------------------
+
+
+

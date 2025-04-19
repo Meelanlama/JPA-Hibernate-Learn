@@ -1,0 +1,59 @@
+The relationship between PayStub and Employee is owned by PayStub class as it has:
+
+ @ManyToOne
+ private Employee employee;
+
+As this column is also on paystub side of database table.
+
+---
+Employe class also has this member variable:
+
+@OneToMany(mappedBy = "employee")
+private List<PayStub> payStub;
+
+This member variable is for reference or convinient to get the data from employee instance.
+
+----------------------------------------------------------------------------------------
+
+Question: When we're writing data in paystub? Why are we setting it in employee?
+
+-        payStub1.setEmployee(employee);
+-        payStub2.setEmployee(employee);
+
+        
+- 	employee.setPayStub(List.of(payStub1, payStub2));
+
+Each paystub already know they're set to that employee. So why again we need to set it?
+
+If we also remove the .setPayStub() value: it still prints the value without it.
+
+Because when you're dealing with objects you want to rely on getting the relationships. No matter when you're using it.
+
+- This .setPayStub() method gurantees the values are asked to saved in database and those updated value are retrieved when you want it. It's always consistent and can return the update values always from database.
+
+- JPA sometimes update values and retrieve those value from database without .setPayStub()
+method too but it doesn't gurantee it. It's not consistent and can return null sometimes.
+
+----------------------------------------------------------------------------------------
+# Modifying the payStubs member variable in Employee:
+
+	@OneToMany(mappedBy = "employee")
+	private List<PayStub> payStub = new ArrayList<>();
+
+# Adding method for convinience:
+
+public void addPayStub(PayStub payStub) {
+        this.payStub.add(payStub);
+    }
+
+Now, we can add the payStub with employee instance like this:
+
+-        employee.addPayStub(payStub1);
+-        employee.addPayStub(payStub2);
+
+Now, the data is super consistent: and those two paysTubs always refer to the same employee instance.
+By doing this the object state is always consistent before persist or after persist.
+
+----------------------------------------------------------------------------------------
+
+
