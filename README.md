@@ -1,0 +1,12 @@
+This repository contains code and examples from the [JPA and Hibernate Essentials]([https://www.javabrains.io/courses/jpa-and-hibernate-essentials](https://www.javabrains.io/courses/jpa-and-hibernate-essentials)) course by Java Brains.
+
+## Learned Topics:
+
+1. **JPA and Hibernate Explained** : Understanding what JPA is and how Hibernate implements it. Covers the fundamental concepts of Java Persistence API as a specification and how Hibernate serves as its implementation, including the architecture, configuration, and core components.
+2. **JPA App Hands-on**: Setting up and running a JPA-based application. A practical walkthrough of creating a JPA application from scratch, including project setup, dependency management, configuration files, and your first entity-database interactions.
+3. **Basic Entity Mapping Annotations**: Mapping Java classes to database tables. Explores essential annotations like @Entity, @Table, @Id, @Column, and others to effectively transform your Java objects into database entities with proper field mappings.
+4. **CRUD operations with JPA**: Performing Create, Read, Update, Delete operations using JPA. Demonstrates how to persist, retrieve, modify, and remove entities using EntityManager and related JPA APIs, with best practices for transaction management.
+5. **Entity Relationship Annotations**: Handling relationships: OneToOne, OneToMany, ManyToOne, ManyToMany. Detailed coverage of modeling complex domain relationships in your Java applications and how they translate to database structures, including cascade operations and fetch strategies.
+6. **Entity Lifecycle**: Exploring entity states and lifecycle callbacks. Understanding the different states an entity can exist in (transient, managed, detached, removed), and how to leverage lifecycle callbacks (@PrePersist, @PostLoad, etc.) for custom behavior.
+7. **Querying with JPQL**: Writing custom queries using Java Persistence Query Language. Teaches how to write database-agnostic queries with JPQL syntax, including selections, joins, aggregations, and parameters, as well as named queries and native SQL integration.
+8. **Spring Boot JPA**:  Integrating JPA with Spring Boot for rapid application development. Shows how Spring Data JPA simplifies data access with repository interfaces, reduces boilerplate code, and provides powerful features like query methods, pagination, and sorting.
